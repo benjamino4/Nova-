@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>ORBYT</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- moving particle deep-space background -->
+  <canvas id="space" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="tap-layer" id="tapLayer" aria-hidden="true"></div>
+
+  <!-- intro: particles gather + logo draws in -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <canvas id="introCanvas"></canvas>
+    <svg class="logo logo-xl" viewBox="0 0 120 120">
+      <circle class="lg-ring" cx="60" cy="60" r="50" />
+      <path class="lg-orbit" d="M24 78 C40 30 80 30 96 78" />
+      <circle class="lg-dot" cx="60" cy="36" r="5" />
+    </svg>
+    <div class="intro-word">ORBYT</div>
+  </div>
+
+  <main class="deck" id="deck">
+    <!-- ============ HOME / DASHBOARD ============ -->
+    <section class="page page-home on" id="pageHome">
+      <canvas class="bubbles bubbles-hero" id="bubblesHero" aria-hidden="true"></canvas>
+      <header class="top">
+        <div class="brand">
+          <svg class="logo logo-sm" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="lg-ring" cx="60" cy="60" r="50" />
+            <path class="lg-orbit" d="M24 78 C40 30 80 30 96 78" />
+            <circle class="lg-dot" cx="60" cy="36" r="6" />
+          </svg>
+          <span class="wordmark">ORBYT</span>
+        </div>
+        <div class="user-chip" id="userChip">
+          <span class="uc-dot"></span>
+          <span class="uc-name" id="userName">explorer</span>
+        </div>
+      </header>
+
+      <div class="home-body">
+        <div class="stats">
+          <div class="stat"><div class="stat-num" id="streakNum">0</div><div class="stat-cap">streak</div></div>
+          <div class="sep"></div>
+          <div class="stat"><div class="stat-num" id="pointsNum">0</div><div class="stat-cap">energy</div></div>
+          <div class="sep"></div>
+          <div class="stat"><div class="stat-num" id="totalNum">0</div><div class="stat-cap">days</div></div>
+        </div>
+
+        <div class="heat" id="heat" aria-label="Last 7 days"></div>
+
+        <button class="checkin" id="checkin">
+          <span class="ci-glow"></span>
+          <span class="ci-label" id="checkinLabel">CHECK IN<br/><em>+10 energy</em></span>
+        </button>
+        <div class="pop-layer" id="popLayer" aria-hidden="true"></div>
+
+        <div class="nav-bubbles">
+          <button class="nav-bubble" data-go="pageQuests" id="navQuests">
+            <span class="nb-ring"></span>
+            <span class="nb-ico">◈</span>
+            <span class="nb-txt">Quests</span>
+          </button>
+          <button class="nav-bubble" data-go="pageWallet" id="navWallet">
+            <span class="nb-ring"></span>
+            <span class="nb-ico">◆</span>
+            <span class="nb-txt">Wallet</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="home-foot" id="status">a daily orbit through the void</div>
+    </section>
+
+    <!-- ============ QUESTS ============ -->
+    <section class="page page-panel" id="pageQuests" aria-hidden="true">
+      <canvas class="bubbles" id="bubblesTasks" aria-hidden="true"></canvas>
+      <header class="panel-top">
+        <button class="back" data-back aria-label="Back"><span></span></button>
+        <div class="pt-title">Quests</div>
+      </header>
+      <div class="panel-scroll">
+        <div class="panel-head">
+          <div class="ph-index">01 / DAILY</div>
+          <p>Complete rituals to charge your energy.</p>
+          <div class="rule"></div>
+        </div>
+        <div class="tasks" id="tasks"></div>
+
+        <div class="panel-head">
+          <div class="ph-index">02 / STREAK REWARDS</div>
+          <p>Claim milestone bonuses for staying in orbit.</p>
+          <div class="rule"></div>
+        </div>
+        <div class="milestones" id="milestones"></div>
+      </div>
+    </section>
+
+    <!-- ============ WALLET ============ -->
+    <section class="page page-panel" id="pageWallet" aria-hidden="true">
+      <canvas class="bubbles" id="bubblesWallet" aria-hidden="true"></canvas>
+      <header class="panel-top">
+        <button class="back" data-back aria-label="Back"><span></span></button>
+        <div class="pt-title">Wallet</div>
+      </header>
+      <div class="panel-scroll">
+        <div class="pass" id="walletCard">
+          <div class="pass-top">
+            <div class="pass-mark"><span class="diamond"></span></div>
+            <div class="pass-meta">
+              <div class="pass-label">TON · ORBYT PASS</div>
+              <div class="wallet-state" id="walletState">Not connected</div>
+            </div>
+          </div>
+          <div class="pass-perf"></div>
+          <div class="pass-bottom">
+            <div class="pass-addr-cap">Address</div>
+            <div class="wallet-addr" id="walletAddr">—</div>
+          </div>
+          <button class="btn" id="walletBtn">Connect TON</button>
+        </div>
+
+        <div class="panel-head">
+          <div class="ph-index">STORE · <span id="starBal">0</span> ⭐</div>
+          <p>Spend Stars to keep exploring deep space.</p>
+          <div class="rule"></div>
+        </div>
+        <div class="store" id="store"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ ROCKET LAUNCH FAB ============ -->
+  <button class="rocket-fab" id="rocketLaunch" aria-label="Launch space explorer">
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M24 4c7 5 10 12 10 21l-4 8h-12l-4-8c0-9 3-16 10-21z"/>
+      <circle cx="24" cy="20" r="4" class="rf-win"/>
+      <path d="M14 27l-6 4 4 1 2 5 4-4zM34 27l6 4-4 1-2 5-4-4z" class="rf-fin"/>
+    </svg>
+    <span class="rf-flame"></span>
+  </button>
+
+  <!-- ============ SPACE EXPLORER OVERLAY ============ -->
+  <div class="game" id="gameOverlay" aria-hidden="true">
+    <canvas id="gameCanvas"></canvas>
+    <div class="g-hud">
+      <button class="g-exit" id="gExit" aria-label="Exit">✕</button>
+      <div class="g-readout">
+        <div class="g-speed" id="gSpeed">0 km/s</div>
+        <div class="g-lives" id="gLives">♥♥♥</div>
+      </div>
+      <div class="g-compass">
+        <div class="g-arrow" id="gArrow">↑</div>
+        <div class="g-dist" id="gDist">—</div>
+      </div>
+      <button class="g-gear" id="gGear" aria-label="Settings">⚙</button>
+      <div class="g-msg" id="gMsg" hidden></div>
+    </div>
+
+    <div class="g-controls">
+      <div class="g-speedset">
+        <button class="g-sbtn" id="gSlow" aria-label="Slow down">−</button>
+        <div class="g-throttle"><span id="gThrottleFill"></span></div>
+        <button class="g-sbtn" id="gFast" aria-label="Speed up">+</button>
+      </div>
+      <button class="g-boost" id="gBoost">BOOST ⚡ <b id="gBoostLeft">3</b></button>
+    </div>
+
+    <!-- settings panel -->
+    <div class="g-modal" id="gSettings" hidden>
+      <div class="g-card">
+        <div class="g-kicker">FLIGHT SETTINGS</div>
+        <h3>Controls</h3>
+        <label class="g-slider">
+          <span>Swipe sensitivity <b id="gSensVal">1.0×</b></span>
+          <input type="range" id="gSens" min="0.4" max="2" step="0.1" value="1" />
+        </label>
+        <label class="g-slider">
+          <span>Cruise speed <b id="gSpeedVal">1.0×</b></span>
+          <input type="range" id="gSpeedSet" min="0.5" max="2" step="0.1" value="1" />
+        </label>
+        <div class="g-actions"><button class="btn" id="gSettingsClose">Done</button></div>
+      </div>
+    </div>
+
+    <!-- discovery -->
+    <div class="g-modal" id="gDiscover" hidden>
+      <div class="g-card">
+        <div class="g-kicker">PLANET REACHED</div>
+        <h3 id="gpName">Planet</h3>
+        <div class="g-stats" id="gpStats"></div>
+        <div class="g-actions">
+          <button class="btn" id="gLand">Land &amp; snapshot</button>
+          <button class="btn alt" id="gResume">Keep flying</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- snapshot -->
+    <div class="g-modal" id="gSnap" hidden>
+      <div class="g-card">
+        <div class="g-kicker">POSTCARD</div>
+        <img id="gSnapImg" class="g-snap" alt="Snapshot" />
+        <div class="g-actions">
+          <button class="btn" id="gShare">Share</button>
+          <a class="btn alt" id="gDownload" download>Save</a>
+          <button class="btn alt" id="gSnapClose">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- game over (out of lives) -->
+    <div class="g-modal" id="gOver" hidden>
+      <div class="g-card">
+        <div class="g-kicker warn">HULL DESTROYED</div>
+        <h3>Out of lives</h3>
+        <p class="g-over-note" id="gOverNote">Repairs restore 1 life per hour · or buy more.</p>
+        <div class="g-actions">
+          <button class="btn" id="gBuyLife">Buy 1 life · 5 ⭐</button>
+          <button class="btn alt" id="gOverExit">Return to base</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
