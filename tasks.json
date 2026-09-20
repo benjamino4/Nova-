@@ -1,0 +1,10 @@
+{
+  "_readme": "Edit this file to add / change quests. Save and refresh the app - no restart needed. Each task: id (unique), title, hint, reward (points), kind. kind = 'pulse' (auto: done when you pulse today) | 'streak' (auto: add \"target\": N) | 'wallet' (auto: done when a wallet is connected) | 'link' (opens \"url\" then completes) | 'manual' (tap to complete). Optional \"repeat\": \"daily\" (default) or \"once\". For 'link' add a \"url\". Order here = order shown.",
+  "tasks": [
+    { "id": "daily_pulse", "title": "Send your daily pulse", "hint": "Tap the core once a day", "reward": 10, "kind": "pulse" },
+    { "id": "streak_3", "title": "Hold a 3-day streak", "hint": "Consistency fuels the void", "reward": 30, "kind": "streak", "target": 3 },
+    { "id": "connect_wallet", "title": "Connect your TON wallet", "hint": "Link a wallet to collect rewards", "reward": 50, "kind": "wallet" },
+    { "id": "share", "title": "Share ORBYT with a friend", "hint": "Spread the signal", "reward": 20, "kind": "link", "url": "https://t.me/share/url?url=https%3A%2F%2Ft.me&text=Join%20me%20on%20ORBYT", "repeat": "daily" },
+    { "id": "join_channel", "title": "Join the channel", "hint": "Follow the mission", "reward": 15, "kind": "link", "url": "https://t.me/telegram", "repeat": "once" }
+  ]
+}

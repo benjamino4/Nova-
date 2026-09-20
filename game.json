@@ -1,0 +1,11 @@
+{
+  "rewards": {
+    "discover": 75,
+    "share": 40
+  },
+  "_readme": {
+    "discover": "Energy silently granted the FIRST time a user reaches a planet in the Space Explorer. On purpose, this is never shown or promised anywhere in the UI - it is a surprise reward.",
+    "share": "Energy granted the first time a user shares a snapshot taken on a planet.",
+    "how_to_customize": "Edit the two numbers above to whatever you want. Changes take effect on the next page refresh - no server restart needed. Rewards are counted per unique planet, so a user cannot farm the same planet twice."
+  }
+}
